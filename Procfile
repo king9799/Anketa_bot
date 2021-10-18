@@ -1,0 +1,1 @@
+web: gunicorn Anketa_bot.wsgi --log-file -
