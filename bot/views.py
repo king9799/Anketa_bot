@@ -10,7 +10,7 @@ from .texts import *
 from django.core.files.base import ContentFile
 # Create your views here.
 
-bot = TeleBot("1777086658:AAH0a2XGd9XlV97N-dUuzdRFUe743Okyh8I")
+bot = TeleBot("1980173737:AAHpkqS1mwpEpmus0DNakFOksaoezYaShDY")
 
 
 @csrf_exempt
