@@ -242,13 +242,14 @@ def echo_all(message):
     elif message.text == 'Sirdaryo viloyati':
         fil_buttons(message, client, 'Guliston shaxri')
     elif message.text == 'Men roziman':
+        bot.send_message(message.from_user.id, '✔️Arizangiz qabul qilindi tez orada siz bilan bog`lanishadi', reply_markup=types.ReplyKeyboardRemove())
         text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞:{client.tel_raq}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
+        bot.send_photo('593914942', client.photo, text)
+        bot.send_photo('1763634473', client.photo, text)
         # if len(Clients.objects.filter(user_id=593914942)) == 1 or 1 == len(Clients.objects.filter(user_id=1763634473)):
         #     x = 593914942
         #     y = 1763634473
         #     bot.send_photo(x, client.photo, text)
-        bot.send_photo(message.from_user.id, client.photo, text)
-        bot.send_message(message.from_user.id, '✔️Arizangiz qabul qilindi tez orada siz bilan bog`lanishadi', reply_markup=types.ReplyKeyboardRemove())
     else:
         working(message)
 
