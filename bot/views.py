@@ -494,7 +494,7 @@ def tum_buttons(message, client, a):
 
 def fil_buttons(message, client, *args):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    if len(args) > 1:
+    if 4 > len(args) > 1:
         btn1 = types.KeyboardButton(args[0])
         btn2 = types.KeyboardButton(args[1])
         btn3 = types.KeyboardButton(args[2])
