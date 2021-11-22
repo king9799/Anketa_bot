@@ -1,5 +1,4 @@
 from urllib import request
-
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render,  HttpResponse
 import telebot
@@ -238,7 +237,7 @@ def echo_all(message):
     elif message.text == 'Fargona viloyati':
         fil_buttons(message, client, 'Uchkòprik', 'Yozyovon', 'Qòshtepa')
     elif message.text == 'Namangan viloyati':
-        fil_buttons(message, client, 'Uychi tumani', 'Kosonsoy tumani', 'Chust tumani')
+        fil_buttons(message, client, 'Uychi tumani', 'Kosonsoy tumani', 'Chust tumani', 'Pop tumani')
     elif message.text == 'Sirdaryo viloyati':
         fil_buttons(message, client, 'Guliston shaxri')
     elif message.text == 'Men roziman':
@@ -401,9 +400,14 @@ def photo_handler(message):
         client.photo.save(path, content, save=True)
         client.step += 1
         client.save()
-    text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞:{client.tel_raq}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
-    bot.send_photo(message.from_user.id, client.photo, text)
-    btn_pass(message, client, skip='Men roziman')
+    if client.otasini_ismi is None:
+        text = f'👤: {client.familiyasi} {client.ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞:{client.tel_raq}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
+        bot.send_photo(message.from_user.id, client.photo, text)
+        btn_pass(message, client, skip='Men roziman')
+    else:
+        text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞:{client.tel_raq}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
+        bot.send_photo(message.from_user.id, client.photo, text)
+        btn_pass(message, client, skip='Men roziman')
 
 
 def register_user(message):
@@ -495,6 +499,12 @@ def fil_buttons(message, client, *args):
         btn2 = types.KeyboardButton(args[1])
         btn3 = types.KeyboardButton(args[2])
         markup.add(btn1, btn2, btn3)
+    elif len(args) == 4:
+        btn1 = types.KeyboardButton(args[0])
+        btn2 = types.KeyboardButton(args[1])
+        btn3 = types.KeyboardButton(args[2])
+        btn4 = types.KeyboardButton(args[3])
+        markup.add(btn1, btn2, btn3, btn4)
     else:
         btn1 = types.KeyboardButton(args[0])
         markup.add(btn1)
@@ -539,4 +549,3 @@ def til_btn(message, client, text,  *args):
         markup.add(btn5)
     markup.add(btn3, btn4)
     bot.send_message(message.from_user.id, texts[client.step]+f'\n:{text}', reply_markup=markup)
-
