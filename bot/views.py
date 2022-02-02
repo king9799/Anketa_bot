@@ -7,6 +7,7 @@ from telebot import *
 from .models import *
 from .texts import *
 from django.core.files.base import ContentFile
+from datetime import date
 # Create your views here.
 
 bot = TeleBot("1971047625:AAHjxhFMp2iA5Y2W7w4DdnsaTswbHHQtOjU")
@@ -15,7 +16,7 @@ bot = TeleBot("1971047625:AAHjxhFMp2iA5Y2W7w4DdnsaTswbHHQtOjU")
 @csrf_exempt
 def index(request):
     if request.method == 'GET':
-        return HttpResponse("Bot Url Page")
+        return render(request, "index.html")
     if request.method == 'POST':
         bot.process_new_updates([
             telebot.types.Update.de_json(
@@ -23,6 +24,44 @@ def index(request):
             )
         ])
         return HttpResponse(status=200)
+
+
+# def clients(request, id):
+#     today = date.today()
+#     Str = date.isoformat(today)
+#     client = Clients.objects.all()
+#     clients = Clients.objects.filter(cr_on=Str)
+#     branch = Branch.objects.all()
+#     get_branch = Branch.objects.get(id=id)
+#     get_client = Clients.objects.filter(ish_joyi=get_branch.name)
+#     provinces = Province.objects.all()
+#     return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
+#
+#
+# def clients_info(request, id):
+#     today = date.today()
+#     Str = date.isoformat(today)
+#     client = Clients.objects.all()
+#     clients = Clients.objects.filter(cr_on=Str)
+#     branch = Branch.objects.all()
+#     get_branch = Branch.objects.get(id=id)
+#     get_client = Clients.objects.filter(ish_joyi=get_branch.name)
+#     provinces = Province.objects.all()
+#     return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
+#
+#
+# def dashboard(request):
+#     today = date.today()
+#     Str = date.isoformat(today)
+#     client = Clients.objects.all()
+#     clients = Clients.objects.filter(cr_on=Str)
+#     provinces = Province.objects.all()
+#     branch = Branch.objects.all()
+#     return render(request, 'dashboard.html', {'today': len(clients), 'provinces': provinces, 'client': len(client), 'branch': branch})
+#
+#
+# def log_in(request):
+#     return render(request, 'login-2.html')
 
 
 @bot.message_handler(commands=['start'])
@@ -237,12 +276,12 @@ def echo_all(message):
     elif message.text == 'Fargona viloyati':
         fil_buttons(message, client, 'Uchkòprik', 'Yozyovon', 'Qòshtepa')
     elif message.text == 'Namangan viloyati':
-        fil_buttons(message, client, 'Uychi tumani', 'Kosonsoy tumani', 'Chust tumani', 'Pop tumani')
+        fil_buttons(message, client, 'Uychi tumani', 'Kosonsoy tumani', 'Chust tumani', 'Pop tumani', 'Uchqo\'rg\'ong')
     elif message.text == 'Sirdaryo viloyati':
         fil_buttons(message, client, 'Guliston shaxri')
     elif message.text == 'Men roziman':
         bot.send_message(message.from_user.id, '✔️Arizangiz qabul qilindi tez orada siz bilan bog`lanishadi', reply_markup=types.ReplyKeyboardRemove())
-        text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞:{client.tel_raq}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
+        text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞1:{client.tel_raq} \n📞2:{client.tel_raq_qosh}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
         bot.send_photo(593914942, client.photo, text)
         bot.send_photo(1763634473, client.photo, text)
         # if len(Clients.objects.filter(user_id=593914942)) == 1 or 1 == len(Clients.objects.filter(user_id=1763634473)):
@@ -269,7 +308,7 @@ def working(message):
         btn_pass(message, client)
     elif client.step == 3:
         client.step += 1
-        client.ismi = message.text
+        client.otasini_ismi = message.text
         client.save()
         buttons(message,client)
     elif client.step == 4:
@@ -505,6 +544,13 @@ def fil_buttons(message, client, *args):
         btn3 = types.KeyboardButton(args[2])
         btn4 = types.KeyboardButton(args[3])
         markup.add(btn1, btn2, btn3, btn4)
+    elif len(args) == 5:
+        btn1 = types.KeyboardButton(args[0])
+        btn2 = types.KeyboardButton(args[1])
+        btn3 = types.KeyboardButton(args[2])
+        btn4 = types.KeyboardButton(args[3])
+        btn5 = types.KeyboardButton(args[4])
+        markup.add(btn1, btn2, btn3, btn4, btn5)
     else:
         btn1 = types.KeyboardButton(args[0])
         markup.add(btn1)
