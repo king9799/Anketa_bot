@@ -26,42 +26,42 @@ def index(request):
         return HttpResponse(status=200)
 
 
-# def clients(request, id):
-#     today = date.today()
-#     Str = date.isoformat(today)
-#     client = Clients.objects.all()
-#     clients = Clients.objects.filter(cr_on=Str)
-#     branch = Branch.objects.all()
-#     get_branch = Branch.objects.get(id=id)
-#     get_client = Clients.objects.filter(ish_joyi=get_branch.name)
-#     provinces = Province.objects.all()
-#     return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
-#
-#
-# def clients_info(request, id):
-#     today = date.today()
-#     Str = date.isoformat(today)
-#     client = Clients.objects.all()
-#     clients = Clients.objects.filter(cr_on=Str)
-#     branch = Branch.objects.all()
-#     get_branch = Branch.objects.get(id=id)
-#     get_client = Clients.objects.filter(ish_joyi=get_branch.name)
-#     provinces = Province.objects.all()
-#     return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
-#
-#
-# def dashboard(request):
-#     today = date.today()
-#     Str = date.isoformat(today)
-#     client = Clients.objects.all()
-#     clients = Clients.objects.filter(cr_on=Str)
-#     provinces = Province.objects.all()
-#     branch = Branch.objects.all()
-#     return render(request, 'dashboard.html', {'today': len(clients), 'provinces': provinces, 'client': len(client), 'branch': branch})
-#
-#
-# def log_in(request):
-#     return render(request, 'login-2.html')
+def clients(request, id):
+    today = date.today()
+    Str = date.isoformat(today)
+    client = Clients.objects.all()
+    clients = Clients.objects.filter(cr_on=Str)
+    branch = Branch.objects.all()
+    get_branch = Branch.objects.get(id=id)
+    get_client = Clients.objects.filter(ish_joyi=get_branch.name)
+    provinces = Province.objects.all()
+    return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
+
+
+def clients_info(request, id):
+    today = date.today()
+    Str = date.isoformat(today)
+    client = Clients.objects.all()
+    clients = Clients.objects.filter(cr_on=Str)
+    branch = Branch.objects.all()
+    get_branch = Branch.objects.get(id=id)
+    get_client = Clients.objects.filter(ish_joyi=get_branch.name)
+    provinces = Province.objects.all()
+    return render(request, 'clients.html', {'today': len(clients), 'client': client, 'clients': get_client, 'provinces': provinces, 'branch': branch})
+
+
+def dashboard(request):
+    today = date.today()
+    Str = date.isoformat(today)
+    client = Clients.objects.all()
+    clients = Clients.objects.filter(cr_on=Str)
+    provinces = Province.objects.all()
+    branch = Branch.objects.all()
+    return render(request, 'dashboard.html', {'today': len(clients), 'provinces': provinces, 'client': len(client), 'branch': branch})
+
+
+def log_in(request):
+    return render(request, 'login-2.html')
 
 
 @bot.message_handler(commands=['start'])
@@ -75,6 +75,22 @@ def send_welcome(message):
     btn2 = types.KeyboardButton('🇸🇰 Русскый язык 🇸🇰')
     markup.add(btn1, btn2)
     bot.send_message(message.from_user.id, 'Давайте для начала выберем язык:\n\nАввалига тилни танлаб олайлик:', reply_markup=markup)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback(call):
+    if 'tasdiqlandi' in call.data:
+        data = str(call.data).split('_')
+        text = f'Hurmatli {data[2]}, \nVakansiyamizga qiziqish bildirganingiz uchun tashakkur bildiramiz {data[3]} \nSizning nomzodingiz suhbat natijasiga ko\'ra tanlov bosqichidan o`tdi. \nUshbu bosqichda kompaniya sizga ish taklifi berishga tayyor. \nBiz siz bilan Bog\'lanamiz!'
+        bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+        bot.send_message(chat_id=call.from_user.id, text=f'🟢 {data[2]} uchun ijobiy javob yuborildi')
+        bot.send_message(int(data[1]), text=text)
+    elif 'tasdiqlanmadi' in call.data:
+        data = str(call.data).split('_')
+        text = f'Hurmatli {data[2]}, \nVakansiyamizga qiziqish bildirganingiz uchun tashakkur bildiramiz {data[3]} \nAfsuski, sizning nomzodingiz suhbat natijasiga ko\'ra tanlov bosqichidan o`tmadi. \nUshbu bosqichda kompaniya sizga ish taklifini berishga tayyor emas. \nKompaniyamizga ishga joylashish uchun ariza qoldirganingiz uchun minnatdormiz. \nSizga kelgusi ishlaringizga omad tilaymiz!'
+        bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+        bot.send_message(chat_id=call.from_user.id, text=f'🔴 {data[2]} uchun ijobiy javob yuborilmadi')
+        bot.send_message(int(data[1]), text=text)
 
 
 @bot.message_handler(func=lambda message: True)
@@ -279,11 +295,17 @@ def echo_all(message):
         fil_buttons(message, client, 'Uychi tumani', 'Kosonsoy tumani', 'Chust tumani', 'Pop tumani', 'Uchqo\'rg\'ong')
     elif message.text == 'Sirdaryo viloyati':
         fil_buttons(message, client, 'Guliston shaxri')
+    elif message.text == 'Jizzax viloyati':
+        fil_buttons(message, client, 'Jizzax shaxri')
     elif message.text == 'Men roziman':
+        ikey = types.InlineKeyboardMarkup(row_width=1)
+        btn = types.InlineKeyboardButton('✔ qabul qilindi', callback_data=f'tasdiqlandi_{message.from_user.id}_{client.familiyasi} {client.ismi}_{client.ish_joyi}')
+        btn1 = types.InlineKeyboardButton('❌ qabul qilinmadi', callback_data=f'tasdiqlanmadi_{message.from_user.id}_{client.familiyasi} {client.ismi}_{client.ish_joyi}')
+        ikey.add(btn, btn1)
         bot.send_message(message.from_user.id, '✔️Arizangiz qabul qilindi tez orada siz bilan bog`lanishadi', reply_markup=types.ReplyKeyboardRemove())
         text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞1:{client.tel_raq} \n📞2:{client.tel_raq_qosh}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
-        bot.send_photo(593914942, client.photo, text)
-        bot.send_photo(1763634473, client.photo, text)
+        bot.send_photo(593914942, client.photo, text, reply_markup=ikey)
+        # bot.send_photo(1763634473, client.photo, text, reply_markup=ikey)
         # if len(Clients.objects.filter(user_id=593914942)) == 1 or 1 == len(Clients.objects.filter(user_id=1763634473)):
         #     x = 593914942
         #     y = 1763634473
@@ -351,7 +373,7 @@ def working(message):
         client.step += 1
         client.manzil = message.text
         client.save()
-        fil_buttons(message, client, 'Fargona viloyati', 'Namangan viloyati', 'Sirdaryo viloyati' )
+        fil_buttons(message, client, 'Fargona viloyati', 'Namangan viloyati', 'Sirdaryo viloyati', 'Jizzax viloyati' )
     elif client.step == 12:
         client.step += 1
         client.ish_joyi = message.text
