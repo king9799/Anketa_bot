@@ -81,7 +81,8 @@ def send_welcome(message):
 def callback(call):
     if 'tasdiqlandi' in call.data:
         data = str(call.data).split('_')
-        text = f'Hurmatli {data[2]}, \nVakansiyamizga qiziqish bildirganingiz uchun tashakkur bildiramiz {data[3]} \nSizning nomzodingiz suhbat natijasiga ko\'ra tanlov bosqichidan o`tdi. \nUshbu bosqichda kompaniya sizga ish taklifi berishga tayyor. \nBizni shu nomerimizga +998558018888 murojat qiling'
+        text = f'Hurmatli {data[2]}, Vakansiyamizga qiziqish bildirganingiz uchun tashakkur bildiramiz {data[3]} \nSizning nomzodingiz kòrib chiqildi. \nUshbu bosqichda kompaniya sizga ish taklifi bòyicha keyingo bosqichga murojat qilishingiz mumkun. \nBizni shu nomerimizga + 998558018888 murojat qiling.Sizni kutamiz.'
+        # text = f'Hurmatli {data[2]}, \nVakansiyamizga qiziqish bildirganingiz uchun tashakkur bildiramiz {data[3]} \nSizning nomzodingiz suhbat natijasiga ko\'ra tanlov bosqichidan o`tdi. \nUshbu bosqichda kompaniya sizga ish taklifi berishga tayyor. \nBizni shu nomerimizga +998558018888 murojat qiling'
         bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
         bot.send_message(chat_id=call.from_user.id, text=f'🟢 {data[2]} uchun ijobiy javob yuborildi')
         bot.send_message(int(data[1]), text=text)
