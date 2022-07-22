@@ -306,6 +306,7 @@ def echo_all(message):
         bot.send_message(message.from_user.id, '✔️Arizangiz qabul qilindi tez orada siz bilan bog`lanishadi', reply_markup=types.ReplyKeyboardRemove())
         text = f'👤: {client.familiyasi} {client.ismi} {client.otasini_ismi} \n  📆: {client.tugulgan_sana} \n 📍: {client.manzil_vil} {client.manzil_tum} {client.manzil} \n 👨‍👩‍👧‍👦:{client.oilaviy}\n 💼:{client.mutaxasis}\n📞1:{client.tel_raq} \n📞2:{client.tel_raq_qosh}\n 🧳:{client.ish_davri}\n🎓: {client.malumoti}\n 🏫: {client.qosh_mal}\n 🧑‍💻: {client.qay_das}\n 🇷🇺🇺🇿🇺🇸: {client.qay_til}\n 🔍📍: {client.ish_joyi}\n🧰:{client.lavozimi}\n 💰:{client.maosh}\n'
         bot.send_photo(593914942, client.photo, text, reply_markup=ikey)
+        bot.send_photo(1430918021, client.photo, text, reply_markup=ikey)
         # bot.send_photo(1763634473, client.photo, text, reply_markup=ikey)
         # if len(Clients.objects.filter(user_id=593914942)) == 1 or 1 == len(Clients.objects.filter(user_id=1763634473)):
         #     x = 593914942
